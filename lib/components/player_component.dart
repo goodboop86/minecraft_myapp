@@ -3,6 +3,7 @@ import 'package:flame/flame.dart';
 import 'package:flame/sprite.dart';
 import 'package:minecraft/global/global_game_reference.dart';
 import 'package:minecraft/global/player_data.dart';
+import 'package:minecraft/utils/game_methods.dart';
 
 class PlayerComponent extends SpriteAnimationComponent {
   final Vector2 playerDimensions = Vector2.all(60);
@@ -22,6 +23,9 @@ class PlayerComponent extends SpriteAnimationComponent {
   Future<void> onLoad() async {
     super.onLoad();
 
+    priority = 2;
+    anchor = Anchor.center;
+
     playerWalkingSpriteSheet = SpriteSheet(
         image: await Flame.images
             .load("sprite_sheets/player/player_walking_sprite_sheet.png"),
@@ -32,7 +36,6 @@ class PlayerComponent extends SpriteAnimationComponent {
             .load("sprite_sheets/player/player_idle_sprite_sheet.png"),
         srcSize: playerDimensions);
 
-    size = Vector2(60, 60);
     position = Vector2(100, 200);
 
     animation = idleAnimation;
@@ -75,5 +78,11 @@ class PlayerComponent extends SpriteAnimationComponent {
         ComponentMotionState.idle) {
       animation = idleAnimation;
     }
+  }
+
+  @override
+  void onGameResize(Vector2 newGameSize) {
+    super.onGameResize(newGameSize);
+    size = GameMethods.instance.blockSize;
   }
 }

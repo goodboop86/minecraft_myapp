@@ -1,5 +1,4 @@
 import 'package:flame/game.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:minecraft/components/block_component.dart';
 import 'package:minecraft/global/global_game_reference.dart';
@@ -24,9 +23,24 @@ class MainGame extends FlameGame {
   Future<void> onLoad() async {
     super.onLoad();
 
-    print(ChunkGenerationMethods.instance.generateChunk());
+    camera.followComponent(playerComponent);
+    add(playerComponent);
+    renderChuck(ChunkGenerationMethods.instance.generateChunk());
+  }
 
-    add(PlayerComponent());
-    add(BlockComponent(block: Blocks.grass));
+  void renderChuck(List<List<Blocks?>> chunk) {
+    chunk.asMap().forEach((int yIndex, List<Blocks?> rowOfBlocks) {
+      rowOfBlocks.asMap().forEach((int xIndex, Blocks? block) {
+        if (block != null) {
+          add(BlockComponent(
+            block: block,
+            blockIndex: Vector2(
+              xIndex.toDouble(),
+              yIndex.toDouble(),
+            ),
+          ));
+        }
+      });
+    });
   }
 }
