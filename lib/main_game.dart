@@ -1,9 +1,11 @@
 import 'package:flame/game.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:minecraft/components/block_component.dart';
 import 'package:minecraft/global/global_game_reference.dart';
 import 'package:minecraft/global/world_data.dart';
 import 'package:minecraft/resources/blocks.dart';
+import 'package:minecraft/utils/chunk_generation_methods.dart';
 
 import 'components/player_component.dart';
 
@@ -21,6 +23,9 @@ class MainGame extends FlameGame {
   @override
   Future<void> onLoad() async {
     super.onLoad();
+
+    print(ChunkGenerationMethods.instance.generateChunk());
+
     add(PlayerComponent());
     add(BlockComponent(block: Blocks.grass));
   }
