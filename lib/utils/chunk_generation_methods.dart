@@ -26,13 +26,18 @@ class ChunkGenerationMethods {
 
     List<List<Blocks?>> chunk = generateNullChunk();
 
+    // chunkIndex: int 16,32,...の数だけ乱数を生成する
+    // プレイヤーの移動に応じて配列が長くなるので良くない
     List<List<double>> rawNoise = noise2(chunkWidth * (chunkIndex + 1), 1,
         noiseType: NoiseType.Perlin,
         frequency: 0.05,
         seed: GlobalGameReference
             .instance.gameReference.worldData.seed); //98765493
 
+    // 乱数はdoubleなので、intに変換する
     List<int> yValues = getYValuesFromRawNoise(rawNoise);
+
+    // 指定したchunkIndexに該当した乱数のみを取得する
     yValues.removeRange(0, chunkWidth * chunkIndex);
 
     chunk = generatePrimarySoil(chunk, yValues, biome);

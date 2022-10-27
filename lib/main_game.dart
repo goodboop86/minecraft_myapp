@@ -5,6 +5,7 @@ import 'package:minecraft/global/global_game_reference.dart';
 import 'package:minecraft/global/world_data.dart';
 import 'package:minecraft/resources/blocks.dart';
 import 'package:minecraft/utils/chunk_generation_methods.dart';
+import 'package:minecraft/utils/constants.dart';
 import 'package:minecraft/utils/game_methods.dart';
 
 import 'components/player_component.dart';
@@ -30,19 +31,23 @@ class MainGame extends FlameGame {
         ChunkGenerationMethods.instance.generateChunk(0));
     GameMethods.instance.addChunkToRightWorldChunls(
         ChunkGenerationMethods.instance.generateChunk(1));
-    renderChuck();
+    GameMethods.instance.addChunkToRightWorldChunls(
+        ChunkGenerationMethods.instance.generateChunk(2));
+    renderChuck(0);
+    renderChuck(1);
+    renderChuck(2);
   }
 
-  void renderChuck() {
-    worldData.rightWorldChunks
-        .asMap()
-        .forEach((int yIndex, List<Blocks?> rowOfBlocks) {
+  void renderChuck(int chunkIndex) {
+    List<List<Blocks?>> chunk = GameMethods.instance.getChunk(chunkIndex);
+
+    chunk.asMap().forEach((int yIndex, List<Blocks?> rowOfBlocks) {
       rowOfBlocks.asMap().forEach((int xIndex, Blocks? block) {
         if (block != null) {
           add(BlockComponent(
             block: block,
             blockIndex: Vector2(
-              xIndex.toDouble(),
+              (chunkIndex * chunkWidth) + xIndex.toDouble(),
               yIndex.toDouble(),
             ),
           ));
