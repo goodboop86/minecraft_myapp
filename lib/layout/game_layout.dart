@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:minecraft/global/world_data.dart';
@@ -20,7 +18,8 @@ class GameLayout extends StatelessWidget {
         // GameWidget: gameをWidget化する。
         GameWidget(
             game: MainGame(
-                worldData: WorldData(seed: Random().nextInt(10000000)))),
+                worldData:
+                    WorldData(seed: 98765439 /*Random().nextInt(10000000)*/))),
 
         // 以下にに全てのHUDが来る
         const ControllerWidget()

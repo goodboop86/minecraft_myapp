@@ -25,20 +25,29 @@ class ChunkGenerationMethods {
     Biomes biome = Random().nextBool() ? Biomes.desert : Biomes.birchForest;
 
     List<List<Blocks?>> chunk = generateNullChunk();
-
     // chunkIndex: int 16,32,...の数だけ乱数を生成する
     // プレイヤーの移動に応じて配列が長くなるので良くない
-    List<List<double>> rawNoise = noise2(chunkWidth * (chunkIndex + 1), 1,
+    List<List<double>> rawNoise = noise2(
+        chunkIndex >= 0
+            ? chunkWidth * (chunkIndex + 1)
+            : chunkWidth * (chunkIndex.abs()),
+        1,
         noiseType: NoiseType.Perlin,
         frequency: 0.05,
-        seed: GlobalGameReference
-            .instance.gameReference.worldData.seed); //98765493
+        seed: chunkIndex >= 0
+            ? GlobalGameReference.instance.gameReference.worldData.seed
+            : GlobalGameReference.instance.gameReference.worldData.seed +
+                10); //98765493
 
     // 乱数はdoubleなので、intに変換する
     List<int> yValues = getYValuesFromRawNoise(rawNoise);
 
     // 指定したchunkIndexに該当した乱数のみを取得する
-    yValues.removeRange(0, chunkWidth * chunkIndex);
+    yValues.removeRange(
+        0,
+        chunkIndex >= 0
+            ? chunkWidth * chunkIndex
+            : chunkWidth * (chunkIndex.abs() - 1));
 
     chunk = generatePrimarySoil(chunk, yValues, biome);
     chunk = generateSecondarySoil(chunk, yValues, biome);

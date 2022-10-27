@@ -3,7 +3,6 @@ import 'package:flame/extensions.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:minecraft/global/global_game_reference.dart';
 import 'package:minecraft/resources/blocks.dart';
 import 'package:minecraft/utils/constants.dart';
@@ -42,23 +41,47 @@ class GameMethods {
     return spriteSheet.getSprite(0, block.index);
   }
 
-  void addChunkToRightWorldChunls(List<List<Blocks?>> chunk) {
-    chunk.asMap().forEach((int yIndex, List<Blocks?> value) {
-      GlobalGameReference
-          .instance.gameReference.worldData.rightWorldChunks[yIndex]
-          .addAll(value);
-    });
+  void addChunkToWorldChunks(
+      List<List<Blocks?>> chunk, bool isInRightWorldChunks) {
+    if (isInRightWorldChunks) {
+      chunk.asMap().forEach((int yIndex, List<Blocks?> value) {
+        GlobalGameReference
+            .instance.gameReference.worldData.rightWorldChunks[yIndex]
+            .addAll(value);
+      });
+    } else {
+      chunk.asMap().forEach((int yIndex, List<Blocks?> value) {
+        GlobalGameReference
+            .instance.gameReference.worldData.leftWorldChunks[yIndex]
+            .addAll(value);
+      });
+    }
   }
 
   List<List<Blocks?>> getChunk(int chunkIndex) {
     List<List<Blocks?>> chunk = [];
 
-    GlobalGameReference.instance.gameReference.worldData.rightWorldChunks
-        .asMap()
-        .forEach((int index, List<Blocks?> rowOfBlocks) {
-      chunk.add(rowOfBlocks.sublist(
-          chunkWidth * chunkIndex, chunkWidth * (chunkIndex + 1)));
-    });
+    if (chunkIndex >= 0) {
+      GlobalGameReference.instance.gameReference.worldData.rightWorldChunks
+          .asMap()
+          .forEach((int index, List<Blocks?> rowOfBlocks) {
+        chunk.add(rowOfBlocks.sublist(
+            chunkWidth * chunkIndex, chunkWidth * (chunkIndex + 1)));
+      });
+    } else {
+      GlobalGameReference.instance.gameReference.worldData.leftWorldChunks
+          .asMap()
+          .forEach((int index, List<Blocks?> rowOfBlocks) {
+        chunk.add(rowOfBlocks
+                .sublist(chunkWidth * (chunkIndex.abs() - 1),
+                    chunkWidth * (chunkIndex.abs()))
+                .reversed
+                .toList()
+            // 恐らく正しくない実装で本来は別seedのchunkが生成される想定
+            // masterがreverseで実装しているので合わせる。
+            );
+      });
+    }
     return chunk;
   }
 }

@@ -1,5 +1,3 @@
-import 'package:flame/components.dart';
-import 'package:flutter/material.dart';
 import 'package:minecraft/resources/blocks.dart';
 
 enum Biomes { desert, birchForest }

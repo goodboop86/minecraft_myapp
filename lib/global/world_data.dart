@@ -12,4 +12,7 @@ class WorldData {
 
   List<List<Blocks?>> rightWorldChunks =
       List.generate(chunkHeight, (index) => []);
+
+  List<List<Blocks?>> leftWorldChunks =
+      List.generate(chunkHeight, (index) => []);
 }
