@@ -3,6 +3,7 @@ import 'package:flame/extensions.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:minecraft/resources/blocks.dart';
 import 'package:minecraft/utils/constants.dart';
 
@@ -12,7 +13,16 @@ class GameMethods {
   }
 
   Vector2 get blockSize {
-    return Vector2.all(getScreenSize().width / chunkWidth);
+    //return Vector2.all(getScreenSize().width / chunkWidth);
+    return Vector2.all(30);
+  }
+
+  int get freeArea {
+    return (chunkHeight * 0.2).toInt();
+  }
+
+  int get maxSecondaryLoilExtent {
+    return freeArea + 6;
   }
 
   Size getScreenSize() {

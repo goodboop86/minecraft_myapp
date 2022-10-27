@@ -15,6 +15,7 @@ class BlockComponent extends SpriteComponent {
     sprite = await GameMethods.instance.getSpriteFromBlock(block);
   }
 
+  @override
   void onGameResize(Vector2 newGameSize) {
     super.onGameResize(newGameSize);
     size = GameMethods.instance.blockSize;
