@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:fast_noise/fast_noise.dart';
 import 'package:flame/components.dart';
+import 'package:minecraft/global/global_game_reference.dart';
 import 'package:minecraft/utils/game_methods.dart';
 
 import '../resources/biomes.dart';
@@ -20,17 +21,19 @@ class ChunkGenerationMethods {
     );
   }
 
-  List<List<Blocks?>> generateChunk() {
+  List<List<Blocks?>> generateChunk(int chunkIndex) {
     Biomes biome = Random().nextBool() ? Biomes.desert : Biomes.birchForest;
 
     List<List<Blocks?>> chunk = generateNullChunk();
 
-    List<List<double>> rawNoise = noise2(chunkWidth, 1,
+    List<List<double>> rawNoise = noise2(chunkWidth * (chunkIndex + 1), 1,
         noiseType: NoiseType.Perlin,
         frequency: 0.05,
-        seed: Random().nextInt(100000)); //98765493
+        seed: GlobalGameReference
+            .instance.gameReference.worldData.seed); //98765493
 
     List<int> yValues = getYValuesFromRawNoise(rawNoise);
+    yValues.removeRange(0, chunkWidth * chunkIndex);
 
     chunk = generatePrimarySoil(chunk, yValues, biome);
     chunk = generateSecondarySoil(chunk, yValues, biome);
