@@ -24,4 +24,6 @@ class WorldData {
       GameMethods.instance.currentChunkIndex + 1
     ];
   }
+
+  List<int> currentryRenderedChunks = [];
 }

@@ -19,10 +19,11 @@ class MainGame extends FlameGame {
     globalGameReference.gameReference = this;
   }
 
+  // GetXでどこでも参照できるようにする
   GlobalGameReference globalGameReference = Get.put(GlobalGameReference());
   PlayerComponent playerComponent = PlayerComponent();
 
-  // onLoad: 初期化が終わるまで待つ
+  // onLoad: 初期化が終わったら実行
   @override
   Future<void> onLoad() async {
     super.onLoad();
@@ -30,21 +31,23 @@ class MainGame extends FlameGame {
     camera.followComponent(playerComponent);
     add(playerComponent);
 
+    //初期ワールドを生成
     GameMethods.instance.addChunkToWorldChunks(
         ChunkGenerationMethods.instance.generateChunk(-1), false);
     GameMethods.instance.addChunkToWorldChunks(
         ChunkGenerationMethods.instance.generateChunk(0), true);
     GameMethods.instance.addChunkToWorldChunks(
         ChunkGenerationMethods.instance.generateChunk(1), true);
-
     renderChuck(-1);
     renderChuck(0);
     renderChuck(1);
   }
 
   void renderChuck(int chunkIndex) {
+    // worldChunkからchunkIndexに応じた範囲のchunkを取得
     List<List<Blocks?>> chunk = GameMethods.instance.getChunk(chunkIndex);
 
+    // chunkにBlockを詰める
     chunk.asMap().forEach((int yIndex, List<Blocks?> rowOfBlocks) {
       rowOfBlocks.asMap().forEach((int xIndex, Blocks? block) {
         if (block != null) {
@@ -65,5 +68,40 @@ class MainGame extends FlameGame {
     super.update(dt);
     print(GameMethods.instance.currentChunkIndex);
     print(worldData.chunksThatShouldBeRendered);
+    worldData.chunksThatShouldBeRendered
+        .asMap()
+        .forEach((int index, int chunkIndex) {
+      // Chunks isnt rendered
+      if (!worldData.currentryRenderedChunks.contains(chunkIndex)) {
+        // for rightWorldChunks
+        if (chunkIndex >= 0) {
+          // Chunks has not been rendered
+          if (worldData.rightWorldChunks[0].length ~/ chunkWidth <
+              chunkIndex + 1) {
+            GameMethods.instance.addChunkToWorldChunks(
+                ChunkGenerationMethods.instance.generateChunk(chunkIndex),
+                true);
+          }
+
+          renderChuck(chunkIndex);
+
+          worldData.currentryRenderedChunks.add(chunkIndex);
+
+          // for leftWorldChunks
+        } else {
+          // Chunks has not been rendered
+          if (worldData.leftWorldChunks[0].length ~/ chunkWidth <
+              chunkIndex.abs()) {
+            GameMethods.instance.addChunkToWorldChunks(
+                ChunkGenerationMethods.instance.generateChunk(chunkIndex),
+                false);
+          }
+
+          renderChuck(chunkIndex);
+
+          worldData.currentryRenderedChunks.add(chunkIndex);
+        }
+      }
+    });
   }
 }

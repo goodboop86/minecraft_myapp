@@ -73,10 +73,12 @@ class GameMethods {
   List<List<Blocks?>> getChunk(int chunkIndex) {
     List<List<Blocks?>> chunk = [];
 
+    // プレイヤーのインデックスが右側の場合
     if (chunkIndex >= 0) {
       GlobalGameReference.instance.gameReference.worldData.rightWorldChunks
           .asMap()
           .forEach((int index, List<Blocks?> rowOfBlocks) {
+        // rightWorldChunksからchunkIndexに応じたスライスを取得
         chunk.add(rowOfBlocks.sublist(
             chunkWidth * chunkIndex, chunkWidth * (chunkIndex + 1)));
       });
