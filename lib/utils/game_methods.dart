@@ -18,7 +18,7 @@ class GameMethods {
   }
 
   int get freeArea {
-    return (chunkHeight * 0.2).toInt();
+    return (chunkHeight * 0.4).toInt();
   }
 
   int get maxSecondaryLoilExtent {

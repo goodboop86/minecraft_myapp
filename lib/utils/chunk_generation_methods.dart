@@ -1,8 +1,8 @@
 import 'dart:math';
 
 import 'package:fast_noise/fast_noise.dart';
-import 'package:flame/components.dart';
 import 'package:minecraft/global/global_game_reference.dart';
+import 'package:minecraft/resources/structures.dart';
 import 'package:minecraft/utils/game_methods.dart';
 
 import '../resources/biomes.dart';
@@ -53,6 +53,8 @@ class ChunkGenerationMethods {
     chunk = generateSecondarySoil(chunk, yValues, biome);
     chunk = generateStone(chunk);
 
+    chunk = addStructureToChunk(chunk, yValues);
+
     return chunk;
   }
 
@@ -93,6 +95,38 @@ class ChunkGenerationMethods {
     chunk[GameMethods.instance.maxSecondaryLoilExtent]
         .fillRange(x1, x2, Blocks.stone);
 
+    return chunk;
+  }
+
+  List<List<Blocks?>> addStructureToChunk(
+      List<List<Blocks?>> chunk, List<int> yValues) {
+    Structure currentStructure = treeStructure;
+
+// 配列のリンクの都合上、再度作成
+    List<List<Blocks?>> structureList =
+        List.from(currentStructure.structure.reversed);
+
+    int xPositionOfSructure =
+        Random().nextInt(chunkWidth - currentStructure.maxWidth);
+    int yPositionOfStructure =
+        (yValues[xPositionOfSructure + structureList.length ~/ 2]) - 1;
+
+    for (int indexOfRow = 0;
+        indexOfRow < currentStructure.structure.length;
+        indexOfRow++) {
+      List<Blocks?> rawOfBlocksInStructure = structureList[indexOfRow];
+
+      rawOfBlocksInStructure
+          .asMap()
+          .forEach((int index, Blocks? blockInStructure) {
+        if (chunk[yPositionOfStructure - indexOfRow]
+                [xPositionOfSructure + index] ==
+            null) {
+          chunk[yPositionOfStructure - indexOfRow]
+              [xPositionOfSructure + index] = blockInStructure;
+        }
+      });
+    }
     return chunk;
   }
 
