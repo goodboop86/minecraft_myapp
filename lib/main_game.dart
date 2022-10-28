@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flame/game.dart';
 import 'package:get/get.dart';
 import 'package:minecraft/components/block_component.dart';
@@ -56,5 +58,12 @@ class MainGame extends FlameGame {
         }
       });
     });
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+    print(GameMethods.instance.currentChunkIndex);
+    print(worldData.chunksThatShouldBeRendered);
   }
 }

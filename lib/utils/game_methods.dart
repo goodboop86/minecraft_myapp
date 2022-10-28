@@ -29,6 +29,18 @@ class GameMethods {
     return MediaQueryData.fromWindow(WidgetsBinding.instance.window).size;
   }
 
+  double get playerXIndexPosition {
+    return GlobalGameReference
+            .instance.gameReference.playerComponent.position.x /
+        blockSize.x;
+  }
+
+  int get currentChunkIndex {
+    return playerXIndexPosition >= 0
+        ? playerXIndexPosition ~/ chunkWidth
+        : (playerXIndexPosition ~/ chunkWidth) - 1;
+  }
+
   Future<SpriteSheet> getBlockSpriteSheet() async {
     return SpriteSheet(
         image: await Flame.images
