@@ -21,7 +21,7 @@ class GameMethods {
     return (chunkHeight * 0.4).toInt();
   }
 
-  int get maxSecondaryLoilExtent {
+  int get maxSecondarySoilExtent {
     return freeArea + 6;
   }
 

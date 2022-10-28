@@ -72,7 +72,7 @@ class ChunkGenerationMethods {
       List<List<Blocks?>> chunk, List<int> yValues, Biomes biome) {
     yValues.asMap().forEach((int index, int value) {
       for (int i = value + 1;
-          i <= GameMethods.instance.maxSecondaryLoilExtent;
+          i <= GameMethods.instance.maxSecondarySoilExtent;
           i++) {
         chunk[i][index] = BiomeData.getBiomeDataFor(biome).secondarySoil;
       }
@@ -83,7 +83,7 @@ class ChunkGenerationMethods {
 
   List<List<Blocks?>> generateStone(List<List<Blocks?>> chunk) {
     for (int index = 0; index < chunkWidth; index++) {
-      for (int i = GameMethods.instance.maxSecondaryLoilExtent + 1;
+      for (int i = GameMethods.instance.maxSecondarySoilExtent + 1;
           i < chunk.length;
           i++) {
         chunk[i][index] = Blocks.stone;
@@ -93,7 +93,7 @@ class ChunkGenerationMethods {
     int x1 = Random().nextInt(chunkWidth ~/ 2);
     int x2 = x1 + Random().nextInt(chunkWidth ~/ 2);
 
-    chunk[GameMethods.instance.maxSecondaryLoilExtent]
+    chunk[GameMethods.instance.maxSecondarySoilExtent]
         .fillRange(x1, x2, Blocks.stone);
 
     return chunk;
@@ -105,30 +105,35 @@ class ChunkGenerationMethods {
         .generatingStructures
         .asMap()
         .forEach((key, Structure currentStructure) {
-      // 配列のリンクの都合上、再度作成
-      List<List<Blocks?>> structureList =
-          List.from(currentStructure.structure.reversed);
+      for (int occurence = 0;
+          occurence < currentStructure.maxOccurences;
+          occurence++) {
+        // 配列のリンクの都合上、再度作成
+        List<List<Blocks?>> structureList =
+            List.from(currentStructure.structure.reversed);
 
-      int xPositionOfSructure =
-          Random().nextInt(chunkWidth - currentStructure.maxWidth);
-      int yPositionOfStructure =
-          (yValues[xPositionOfSructure + currentStructure.maxWidth ~/ 2]) - 1;
+        int xPositionOfStucture =
+            // indexOutOfError出るので暫定対応
+            Random().nextInt(chunkWidth - currentStructure.maxWidth - 1);
+        int yPositionOfStructure =
+            (yValues[xPositionOfStucture + currentStructure.maxWidth ~/ 2]) - 1;
 
-      for (int indexOfRow = 0;
-          indexOfRow < currentStructure.structure.length;
-          indexOfRow++) {
-        List<Blocks?> rawOfBlocksInStructure = structureList[indexOfRow];
+        for (int indexOfRow = 0;
+            indexOfRow < currentStructure.structure.length;
+            indexOfRow++) {
+          List<Blocks?> rowOfBlocksInStructure = structureList[indexOfRow];
 
-        rawOfBlocksInStructure
-            .asMap()
-            .forEach((int index, Blocks? blockInStructure) {
-          if (chunk[yPositionOfStructure - indexOfRow]
-                  [xPositionOfSructure + index] ==
-              null) {
-            chunk[yPositionOfStructure - indexOfRow]
-                [xPositionOfSructure + index] = blockInStructure;
-          }
-        });
+          rowOfBlocksInStructure
+              .asMap()
+              .forEach((int index, Blocks? blockInStructure) {
+            if (chunk[yPositionOfStructure - indexOfRow]
+                    [xPositionOfStucture + index] ==
+                null) {
+              chunk[yPositionOfStructure - indexOfRow]
+                  [xPositionOfStucture + index] = blockInStructure;
+            }
+          });
+        }
       }
     });
     return chunk;
