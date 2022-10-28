@@ -52,12 +52,12 @@ class MainGame extends FlameGame {
       rowOfBlocks.asMap().forEach((int xIndex, Blocks? block) {
         if (block != null) {
           add(BlockComponent(
-            block: block,
-            blockIndex: Vector2(
-              (chunkIndex * chunkWidth) + xIndex.toDouble(),
-              yIndex.toDouble(),
-            ),
-          ));
+              block: block,
+              blockIndex: Vector2(
+                (chunkIndex * chunkWidth) + xIndex.toDouble(),
+                yIndex.toDouble(),
+              ),
+              chunkIndex: chunkIndex));
         }
       });
     });
