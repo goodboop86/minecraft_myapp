@@ -81,8 +81,8 @@ class PlayerComponent extends SpriteAnimationComponent {
   }
 
   @override
-  void onGameResize(Vector2 size) {
-    super.onGameResize(size);
+  void onGameResize(Vector2 newGameSize) {
+    super.onGameResize(newGameSize);
     size = GameMethods.instance.blockSize;
   }
 }
