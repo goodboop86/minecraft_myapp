@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:fast_noise/fast_noise.dart';
+import 'package:flame/game.dart';
 import 'package:minecraft/global/global_game_reference.dart';
 import 'package:minecraft/resources/structures.dart';
 import 'package:minecraft/structures/trees.dart';
@@ -40,6 +41,8 @@ class ChunkGenerationMethods {
             : GlobalGameReference.instance.gameReference.worldData.seed +
                 10); //98765493
 
+    print(GameMethods.instance.processNoise(rawNoise));
+
     // 乱数はdoubleなので、intに変換する
     List<int> yValues = getYValuesFromRawNoise(rawNoise);
 
@@ -55,6 +58,8 @@ class ChunkGenerationMethods {
     chunk = generateStone(chunk);
 
     chunk = addStructureToChunk(chunk, yValues, biome);
+
+    chunk = addOreToChunk(chunk, Blocks.ironOre);
 
     return chunk;
   }
@@ -148,5 +153,28 @@ class ChunkGenerationMethods {
     });
 
     return yValues;
+  }
+
+  List<List<Blocks?>> addOreToChunk(List<List<Blocks?>> chunk, Blocks block) {
+    List<List<double>> rawNoise = noise2(chunkHeight, chunkWidth,
+        noiseType: NoiseType.Perlin,
+        frequency: 0.055,
+        seed: Random().nextInt(100000));
+
+    List<List<int>> processedNoise =
+        GameMethods.instance.processNoise(rawNoise);
+
+    processedNoise
+        .asMap()
+        .forEach((int rowOfProcessedNoiseIndex, List<int> rowOfProcessedNoise) {
+      rowOfProcessedNoise.asMap().forEach((int index, int value) {
+        if (value < 90 &&
+            chunk[rowOfProcessedNoiseIndex][index] == Blocks.stone) {
+          chunk[rowOfProcessedNoiseIndex][index] = block;
+        }
+      });
+    });
+
+    return chunk;
   }
 }

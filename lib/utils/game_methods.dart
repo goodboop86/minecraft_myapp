@@ -18,7 +18,7 @@ class GameMethods {
   }
 
   int get freeArea {
-    return (chunkHeight * 0.4).toInt();
+    return (chunkHeight * 0.2).toInt();
   }
 
   int get maxSecondarySoilExtent {
@@ -97,5 +97,20 @@ class GameMethods {
       });
     }
     return chunk;
+  }
+
+  List<List<int>> processNoise(List<List<double>> rawNoise) {
+    List<List<int>> processedNoise = List.generate(
+      rawNoise.length,
+      (index) => List.generate(rawNoise[0].length, (index) => 255),
+    );
+
+    for (var x = 0; x < rawNoise.length; x++) {
+      for (var y = 0; y < rawNoise[0].length; y++) {
+        var value = (0x80 + 0x80 * rawNoise[x][y]).floor(); // grayscale
+        processedNoise[x][y] = value;
+      }
+    }
+    return processedNoise;
   }
 }
