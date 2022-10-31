@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:fast_noise/fast_noise.dart';
 import 'package:flame/game.dart';
 import 'package:minecraft/global/global_game_reference.dart';
+import 'package:minecraft/resources/ores.dart';
 import 'package:minecraft/resources/structures.dart';
 import 'package:minecraft/structures/trees.dart';
 import 'package:minecraft/utils/game_methods.dart';
@@ -59,7 +60,10 @@ class ChunkGenerationMethods {
 
     chunk = addStructureToChunk(chunk, yValues, biome);
 
-    chunk = addOreToChunk(chunk, Blocks.ironOre);
+    chunk = addOreToChunk(chunk, Ores.coalOre);
+    chunk = addOreToChunk(chunk, Ores.ironOre);
+    chunk = addOreToChunk(chunk, Ores.goldOre);
+    chunk = addOreToChunk(chunk, Ores.diamondOre);
 
     return chunk;
   }
@@ -155,7 +159,7 @@ class ChunkGenerationMethods {
     return yValues;
   }
 
-  List<List<Blocks?>> addOreToChunk(List<List<Blocks?>> chunk, Blocks block) {
+  List<List<Blocks?>> addOreToChunk(List<List<Blocks?>> chunk, Ores ore) {
     List<List<double>> rawNoise = noise2(chunkHeight, chunkWidth,
         noiseType: NoiseType.Perlin,
         frequency: 0.055,
@@ -168,9 +172,9 @@ class ChunkGenerationMethods {
         .asMap()
         .forEach((int rowOfProcessedNoiseIndex, List<int> rowOfProcessedNoise) {
       rowOfProcessedNoise.asMap().forEach((int index, int value) {
-        if (value < 90 &&
+        if (value < ore.rarity &&
             chunk[rowOfProcessedNoiseIndex][index] == Blocks.stone) {
-          chunk[rowOfProcessedNoiseIndex][index] = block;
+          chunk[rowOfProcessedNoiseIndex][index] = ore.block;
         }
       });
     });
