@@ -1,8 +1,10 @@
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/sprite.dart';
+import 'package:flutter/material.dart';
 import 'package:minecraft/global/global_game_reference.dart';
 import 'package:minecraft/global/player_data.dart';
+import 'package:minecraft/utils/constants.dart';
 import 'package:minecraft/utils/game_methods.dart';
 
 class PlayerComponent extends SpriteAnimationComponent {
@@ -10,6 +12,7 @@ class PlayerComponent extends SpriteAnimationComponent {
   final double stepTime = 0.3;
   final double speed = 5;
   bool isFacingRight = true;
+  double yVelocity = 0;
 
   late SpriteSheet playerWalkingSpriteSheet;
   late SpriteSheet playerIdleSpriteSheet;
@@ -45,6 +48,13 @@ class PlayerComponent extends SpriteAnimationComponent {
   void update(double dt) {
     super.update(dt);
     movementLogic();
+
+    if (yVelocity < gravity * 5) {
+      position.y += yVelocity;
+      yVelocity += gravity;
+    } else {
+      position.y += yVelocity;
+    }
   }
 
   void movementLogic() {
