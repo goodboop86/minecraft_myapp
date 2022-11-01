@@ -26,7 +26,7 @@ class ControllerWidget extends StatelessWidget {
           ControllerButtonWidget(
             path: "assets/controller/center_button.png",
             onPressed: () {
-              debugPrint("center pressed.");
+              playerData.componentMotionState = ComponentMotionState.jumping;
             },
           ),
           ControllerButtonWidget(
