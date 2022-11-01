@@ -33,12 +33,15 @@ class PlayerComponent extends SpriteAnimationComponent with CollisionCallbacks {
 
     intersectionPoints.forEach((Vector2 indivisualIntersectionPont) {
       // player is collided with the ground
-      if (indivisualIntersectionPont.y > (position.y - (size.y * 0.3))) {
+      if (indivisualIntersectionPont.y > (position.y - (size.y * 0.3)) &&
+          (intersectionPoints.first.x - intersectionPoints.last.x).abs() >
+              size.x * 0.4) {
         isCollidingBottom = true;
       }
 
       if (indivisualIntersectionPont.y < (position.y - (size.y * 0.3))) {
-        if (isFacingRight) {
+        // right collision
+        if (indivisualIntersectionPont.x > position.x) {
           isCollidingRight = true;
         } else {
           isCollidingLeft = true;
