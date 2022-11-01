@@ -11,7 +11,7 @@ import 'package:minecraft/utils/game_methods.dart';
 class PlayerComponent extends SpriteAnimationComponent with CollisionCallbacks {
   final Vector2 playerDimensions = Vector2.all(60);
   final double stepTime = 0.3;
-  final double speed = 5;
+  //final double speed = 5;
   bool isFacingRight = true;
   double yVelocity = 0;
 
@@ -77,46 +77,68 @@ class PlayerComponent extends SpriteAnimationComponent with CollisionCallbacks {
   @override
   void update(double dt) {
     super.update(dt);
-    movementLogic();
+    movementLogic(dt);
 
+    fallingLogic(dt);
+    setAllCollisionToFalse();
+  }
+
+  void fallingLogic(double dt) {
     if (!isCollidingBottom) {
-      if (yVelocity < gravity * 5) {
+      // fpsによらず一定の重力で落ちるようにする
+      if (yVelocity < (GameMethods.instance.gravity * dt) * 5) {
         position.y += yVelocity;
-        yVelocity += gravity;
+        yVelocity += GameMethods.instance.gravity * dt;
       } else {
         position.y += yVelocity;
       }
     }
+  }
 
+  void setAllCollisionToFalse() {
     isCollidingBottom = false;
     isCollidingLeft = false;
     isCollidingRight = false;
   }
 
-  void movementLogic() {
-    if (GlobalGameReference.instance.gameReference.worldData.playerData
-                .componentMotionState ==
-            ComponentMotionState.walkingLeft &&
-        !isCollidingLeft) {
-      position.x -= speed;
+  void move(ComponentMotionState componentMotionState, double dt) {
+    switch (componentMotionState) {
+      case ComponentMotionState.walkingLeft:
+        if (!isCollidingLeft) {
+          position.x -= (playerSpeed * GameMethods.instance.blockSize.x) * dt;
+        }
+        if (isFacingRight) {
+          flipHorizontallyAroundCenter();
+          isFacingRight = false;
+        }
+        break;
+      case ComponentMotionState.walkingRight:
+        if (!isCollidingLeft) {
+          position.x += (playerSpeed * GameMethods.instance.blockSize.x) * dt;
+        }
+        if (!isFacingRight) {
+          flipHorizontallyAroundCenter();
+          isFacingRight = true;
+        }
+        break;
+      default:
+        break;
+    }
+  }
 
-      if (isFacingRight) {
-        flipHorizontallyAroundCenter();
-        isFacingRight = false;
-      }
+  void movementLogic(double dt) {
+    if (GlobalGameReference
+            .instance.gameReference.worldData.playerData.componentMotionState ==
+        ComponentMotionState.walkingLeft) {
+      move(ComponentMotionState.walkingLeft, dt);
 
       animation = walkingAnimation;
     }
 
-    if (GlobalGameReference.instance.gameReference.worldData.playerData
-                .componentMotionState ==
-            ComponentMotionState.walkingRight &&
-        !isCollidingRight) {
-      position.x += speed;
-      if (!isFacingRight) {
-        flipHorizontallyAroundCenter();
-        isFacingRight = true;
-      }
+    if (GlobalGameReference
+            .instance.gameReference.worldData.playerData.componentMotionState ==
+        ComponentMotionState.walkingRight) {
+      move(ComponentMotionState.walkingRight, dt);
 
       animation = walkingAnimation;
     }

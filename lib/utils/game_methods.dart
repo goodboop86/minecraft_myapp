@@ -3,6 +3,7 @@ import 'package:flame/extensions.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/physics.dart';
 import 'package:minecraft/global/global_game_reference.dart';
 import 'package:minecraft/resources/blocks.dart';
 import 'package:minecraft/utils/constants.dart';
@@ -18,7 +19,7 @@ class GameMethods {
   }
 
   int get freeArea {
-    return (chunkHeight * 0.2).toInt();
+    return (chunkHeight * 0.4).toInt();
   }
 
   int get maxSecondarySoilExtent {
@@ -39,6 +40,10 @@ class GameMethods {
     return playerXIndexPosition >= 0
         ? playerXIndexPosition ~/ chunkWidth
         : (playerXIndexPosition ~/ chunkWidth) - 1;
+  }
+
+  double get gravity {
+    return 0.8 * blockSize.y;
   }
 
   Future<SpriteSheet> getBlockSpriteSheet() async {
