@@ -1,3 +1,4 @@
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/sprite.dart';
@@ -7,7 +8,7 @@ import 'package:minecraft/global/player_data.dart';
 import 'package:minecraft/utils/constants.dart';
 import 'package:minecraft/utils/game_methods.dart';
 
-class PlayerComponent extends SpriteAnimationComponent {
+class PlayerComponent extends SpriteAnimationComponent with CollisionCallbacks {
   final Vector2 playerDimensions = Vector2.all(60);
   final double stepTime = 0.3;
   final double speed = 5;
@@ -23,8 +24,18 @@ class PlayerComponent extends SpriteAnimationComponent {
       playerIdleSpriteSheet.createAnimation(row: 0, stepTime: stepTime);
 
   @override
+  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
+    super.onCollision(intersectionPoints, other);
+
+    print("Other is $other");
+    print("IntersectionPoints are $intersectionPoints");
+  }
+
+  @override
   Future<void> onLoad() async {
     super.onLoad();
+
+    add(RectangleHitbox());
 
     priority = 2;
     anchor = Anchor.center;
