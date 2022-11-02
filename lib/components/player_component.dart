@@ -112,6 +112,8 @@ class PlayerComponent extends SpriteAnimationComponent with CollisionCallbacks {
   void move(ComponentMotionState componentMotionState, double dt) {
     switch (componentMotionState) {
       case ComponentMotionState.walkingLeft:
+        print("isCollidingLeft: $isCollidingLeft");
+        print("isCollidingRight: $isCollidingRight");
         if (!isCollidingLeft) {
           position.x -= (playerSpeed * GameMethods.instance.blockSize.x) * dt;
         }
@@ -121,7 +123,9 @@ class PlayerComponent extends SpriteAnimationComponent with CollisionCallbacks {
         }
         break;
       case ComponentMotionState.walkingRight:
-        if (!isCollidingLeft) {
+        print("isCollidingLeft: $isCollidingLeft");
+        print("isCollidingRight: $isCollidingRight");
+        if (!isCollidingRight) {
           position.x += (playerSpeed * GameMethods.instance.blockSize.x) * dt;
         }
         if (!isFacingRight) {
