@@ -14,8 +14,8 @@ class GameMethods {
   }
 
   Vector2 get blockSize {
-    return Vector2.all(getScreenSize().width / chunkWidth);
-    //return Vector2.all(30);
+    // return Vector2.all(getScreenSize().width / chunkWidth);
+    return Vector2.all(30);
   }
 
   int get freeArea {
@@ -42,8 +42,17 @@ class GameMethods {
         : (playerXIndexPosition ~/ chunkWidth) - 1;
   }
 
+  Vector2 getIndexPositionFromPixels(Vector2 clickPosition) {
+    return Vector2((clickPosition.x / blockSize.x).floorToDouble(),
+        (clickPosition.y / blockSize.y).floorToDouble());
+  }
+
   double get gravity {
     return 0.8 * blockSize.y;
+  }
+
+  int getChunkIndexFromPositionIndex(Vector2 potitionIndex) {
+    return potitionIndex.x ~/ chunkWidth;
   }
 
   Future<SpriteSheet> getBlockSpriteSheet() async {

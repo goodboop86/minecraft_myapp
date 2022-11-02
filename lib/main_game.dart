@@ -15,7 +15,7 @@ import 'package:minecraft/utils/game_methods.dart';
 import 'components/player_component.dart';
 
 class MainGame extends FlameGame
-    with HasCollisionDetection, HasKeyboardHandlerComponents {
+    with HasCollisionDetection, HasKeyboardHandlerComponents, HasTappables {
   final WorldData worldData;
 
   MainGame({required this.worldData}) {
@@ -132,5 +132,22 @@ class MainGame extends FlameGame
     }
 
     return KeyEventResult.ignored;
+  }
+
+  @override
+  void onTapDown(int pointerId, TapDownInfo info) {
+    super.onTapDown(pointerId, info);
+
+    Vector2 blockPlacingPotition = GameMethods.instance
+        .getIndexPositionFromPixels(info.eventPosition.game);
+
+    add(BlockComponent(
+        block: Blocks.dirt,
+        blockIndex: blockPlacingPotition,
+        chunkIndex: GameMethods.instance
+            .getChunkIndexFromPositionIndex(blockPlacingPotition)));
+
+    print(GameMethods.instance
+        .getIndexPositionFromPixels(info.eventPosition.game));
   }
 }
