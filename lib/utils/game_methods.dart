@@ -8,6 +8,8 @@ import 'package:minecraft/global/global_game_reference.dart';
 import 'package:minecraft/resources/blocks.dart';
 import 'package:minecraft/utils/constants.dart';
 
+enum Direction { top, bottom, left, right }
+
 class GameMethods {
   static GameMethods get instance {
     return GameMethods();
@@ -171,5 +173,52 @@ class GameMethods {
               .leftWorldChunks[blockIndex.y.toInt()]
           [blockIndex.x.toInt().abs() - 1];
     }
+  }
+
+  Blocks? getBlockAtDiretion(Vector2 blockIndex, Direction direction) {
+    switch (direction) {
+      case Direction.top:
+        try {
+          return getBlockAtIndexPosition(
+              Vector2(blockIndex.x, blockIndex.y - 1));
+        } catch (e) {
+          break;
+        }
+      case Direction.bottom:
+        try {
+          return getBlockAtIndexPosition(
+              Vector2(blockIndex.x, blockIndex.y + 1));
+        } catch (e) {
+          break;
+        }
+      case Direction.left:
+        try {
+          return getBlockAtIndexPosition(
+              Vector2(blockIndex.x - 1, blockIndex.y));
+        } catch (e) {
+          break;
+        }
+      case Direction.right:
+        try {
+          return getBlockAtIndexPosition(
+              Vector2(blockIndex.x + 1, blockIndex.y));
+        } catch (e) {
+          break;
+        }
+    }
+    return null;
+  }
+
+  bool adjacentBlockExist(Vector2 blockIndex) {
+    if (getBlockAtDiretion(blockIndex, Direction.top) is Blocks) {
+      return true;
+    } else if (getBlockAtDiretion(blockIndex, Direction.bottom) is Blocks) {
+      return true;
+    } else if (getBlockAtDiretion(blockIndex, Direction.left) is Blocks) {
+      return true;
+    } else if (getBlockAtDiretion(blockIndex, Direction.right) is Blocks) {
+      return true;
+    }
+    return false;
   }
 }
