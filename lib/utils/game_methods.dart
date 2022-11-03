@@ -158,4 +158,18 @@ class GameMethods {
     }
     return false;
   }
+
+  Blocks? getBlockAtIndexPosition(Vector2 blockIndex) {
+    // replace in the rightChunk
+    if (blockIndex.x >= 0) {
+      return GlobalGameReference.instance.gameReference.worldData
+          .rightWorldChunks[blockIndex.y.toInt()][blockIndex.x.toInt()];
+
+      // replace in the leftChunk
+    } else {
+      return GlobalGameReference.instance.gameReference.worldData
+              .leftWorldChunks[blockIndex.y.toInt()]
+          [blockIndex.x.toInt().abs() - 1];
+    }
+  }
 }
