@@ -138,19 +138,24 @@ class MainGame extends FlameGame
   void onTapDown(int pointerId, TapDownInfo info) {
     super.onTapDown(pointerId, info);
 
-    Vector2 blockPlacingPotition = GameMethods.instance
+    Vector2 blockPlacingPosition = GameMethods.instance
         .getIndexPositionFromPixels(info.eventPosition.game);
 
-    GameMethods.instance
-        .replaceBlockAtWorldChunks(Blocks.dirt, blockPlacingPotition);
+    placeBlockLogic(blockPlacingPosition);
+  }
 
-    add(BlockComponent(
-        block: Blocks.dirt,
-        blockIndex: blockPlacingPotition,
-        chunkIndex: GameMethods.instance
-            .getChunkIndexFromPositionIndex(blockPlacingPotition)));
+  void placeBlockLogic(Vector2 blockPlacingPosition) {
+    if (blockPlacingPosition.y > 0 &&
+        blockPlacingPosition.y < chunkHeight &&
+        GameMethods.instance.playerIsWithinRange(blockPlacingPosition)) {
+      GameMethods.instance
+          .replaceBlockAtWorldChunks(Blocks.dirt, blockPlacingPosition);
 
-    print(GameMethods.instance
-        .getIndexPositionFromPixels(info.eventPosition.game));
+      add(BlockComponent(
+          block: Blocks.dirt,
+          blockIndex: blockPlacingPosition,
+          chunkIndex: GameMethods.instance
+              .getChunkIndexFromPositionIndex(blockPlacingPosition)));
+    }
   }
 }

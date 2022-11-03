@@ -36,6 +36,12 @@ class GameMethods {
         blockSize.x;
   }
 
+  double get playerYIndexPosition {
+    return GlobalGameReference
+            .instance.gameReference.playerComponent.position.y /
+        blockSize.y;
+  }
+
   int get currentChunkIndex {
     return playerXIndexPosition >= 0
         ? playerXIndexPosition ~/ chunkWidth
@@ -142,5 +148,14 @@ class GameMethods {
               .leftWorldChunks[blockIndex.y.toInt()]
           [blockIndex.x.toInt().abs() - 1] = block;
     }
+  }
+
+  // 配置したいブロックの距離が自分の範囲かどうか
+  bool playerIsWithinRange(Vector2 positionIndex) {
+    if ((positionIndex.x - playerXIndexPosition).abs() <= maxReach &&
+        (positionIndex.y - playerYIndexPosition).abs() <= maxReach) {
+      return true;
+    }
+    return false;
   }
 }
