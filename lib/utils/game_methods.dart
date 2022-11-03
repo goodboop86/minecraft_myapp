@@ -52,7 +52,9 @@ class GameMethods {
   }
 
   int getChunkIndexFromPositionIndex(Vector2 potitionIndex) {
-    return potitionIndex.x ~/ chunkWidth;
+    return potitionIndex.x >= 0
+        ? potitionIndex.x ~/ chunkWidth
+        : (potitionIndex.x ~/ chunkWidth) - 1;
   }
 
   Future<SpriteSheet> getBlockSpriteSheet() async {
@@ -126,5 +128,19 @@ class GameMethods {
       }
     }
     return processedNoise;
+  }
+
+  void replaceBlockAtWorldChunks(Blocks? block, Vector2 blockIndex) {
+    // replace in the rightChunk
+    if (blockIndex.x >= 0) {
+      GlobalGameReference.instance.gameReference.worldData
+          .rightWorldChunks[blockIndex.y.toInt()][blockIndex.x.toInt()] = block;
+
+      // replace in the leftChunk
+    } else {
+      GlobalGameReference.instance.gameReference.worldData
+              .leftWorldChunks[blockIndex.y.toInt()]
+          [blockIndex.x.toInt().abs() - 1] = block;
+    }
   }
 }

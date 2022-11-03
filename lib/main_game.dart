@@ -141,6 +141,9 @@ class MainGame extends FlameGame
     Vector2 blockPlacingPotition = GameMethods.instance
         .getIndexPositionFromPixels(info.eventPosition.game);
 
+    GameMethods.instance
+        .replaceBlockAtWorldChunks(Blocks.dirt, blockPlacingPotition);
+
     add(BlockComponent(
         block: Blocks.dirt,
         blockIndex: blockPlacingPotition,
