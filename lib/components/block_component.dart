@@ -24,6 +24,7 @@ class BlockComponent extends SpriteComponent {
   }
 
   @override
+  // ignore: avoid_renaming_method_parameters
   void onGameResize(Vector2 newGameSize) {
     super.onGameResize(newGameSize);
     size = GameMethods.instance.blockSize;

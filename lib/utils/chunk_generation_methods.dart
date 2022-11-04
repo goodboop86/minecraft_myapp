@@ -1,11 +1,9 @@
 import 'dart:math';
 
 import 'package:fast_noise/fast_noise.dart';
-import 'package:flame/game.dart';
 import 'package:minecraft/global/global_game_reference.dart';
 import 'package:minecraft/resources/ores.dart';
 import 'package:minecraft/resources/structures.dart';
-import 'package:minecraft/structures/trees.dart';
 import 'package:minecraft/utils/game_methods.dart';
 
 import '../resources/biomes.dart';
@@ -41,8 +39,6 @@ class ChunkGenerationMethods {
             ? GlobalGameReference.instance.gameReference.worldData.seed
             : GlobalGameReference.instance.gameReference.worldData.seed +
                 10); //98765493
-
-    print(GameMethods.instance.processNoise(rawNoise));
 
     // 乱数はdoubleなので、intに変換する
     List<int> yValues = getYValuesFromRawNoise(rawNoise);

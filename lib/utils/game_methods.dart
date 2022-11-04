@@ -3,7 +3,6 @@ import 'package:flame/extensions.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/physics.dart';
 import 'package:minecraft/global/global_game_reference.dart';
 import 'package:minecraft/resources/blocks.dart';
 import 'package:minecraft/utils/constants.dart';
